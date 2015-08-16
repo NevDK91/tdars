@@ -2,7 +2,7 @@
 
 class Punkt extends Eloquent {
 
-	public $table = 'punkt';
+	public $table = 'punkt_copy';
 	public $fillable = ['id', 'rejimRab', 'id_city', 'phone, coords, addr'];
 	public $timestamps = false;
 	public function city(){

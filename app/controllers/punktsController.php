@@ -9,16 +9,17 @@ class punktsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$res = DB::table('punkt')->select('punkt.id', 'punkt.rejimRab', 'punkt.phone', 'punkt.addr', 'city.name')->join('city','city.id','=','punkt.id_city')->get();
+		$res = DB::table('punkt')->select('punkt.id', 'punkt.coords', 'punkt.rejimRab', 'punkt.phone', 'punkt.addr', 'city.name')->join('city','city.id','=','punkt.id_city')->get();
 		//$res = Punkt::all();
 		
 		
 		foreach($res as $city){
 			$data[$city->name][$city->id] = [
 				'id' => $city->id,
-				'Адрес' => $city->addr,
-				'Режим_работы' => $city->rejimRab,
-				'Телефон' => $city->phone
+				'Works' => $city->rejimRab,
+				'Phone' => $city->phone,
+				'Coordins' => $city->coords,
+				'Address' => $city->addr
 			];
 
 		}
@@ -75,7 +76,7 @@ class punktsController extends \BaseController {
 		$x = $coords["X"];
 		$y = $coords["Y"];
 		$row = Punkt::findOrFail($id);
-		$row->coords = $x."/".$y;
+		$row->coords = $x.",".$y;
 		$row->save();
 		return "запись ".$id." Обновлена!";
 

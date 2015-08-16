@@ -78,6 +78,7 @@
       var punkt_obj = [];
       var cities = [];
       id = 1;
+      var cor = [];
       for(var key1 in data) {
 
         li += "<li>";
@@ -92,46 +93,78 @@
 
           for(var punkt in punkts) {
 
+            currentCity = city;
+
             id_punkt = punkt;
 
             attrs_punkt = punkts[punkt];
 
-            address = attrs_punkt.Адрес;
+            ///////////////////
 
-            rejimRab = attrs_punkt.Режим_работы;
+            address = attrs_punkt.Address;
 
-            tel = attrs_punkt.Телефон;
+            works = attrs_punkt.Works;
+
+            tel = attrs_punkt.Phone;
+
+            coors = attrs_punkt.Coordins;
+            coors = coors.split(",")
+            console.log("г "+city+". аддр "+address+" @ "+coors);
+            ///////////////////////
 
             // Поиск координат по городу и адресу
-             myGeocoder = ymaps.geocode("город "+city+",+"+address);
+            //console.log("город "+city+",+"+address);
+             
+             /*myGeocoder = ymaps.geocode("город "+city+",+"+address);
              myGeocoder.then(
                 function (res) {
-                  console.log(id);
-                  coords = res.geoObjects.get(0).geometry.getCoordinates();
-                     myPlacemark = new  ymaps.Placemark([coords[0], coords[1]], {
-                      balloonContentHeader: '<strong>'+ 'address' +'</strong>',
-                      balloonContentBody: '<em>'+ 'rejumRab'+'</em>',
-                      balloonContentFooter: '<p>'+ 'tel' +'</p>'
-                    });
-                    x = coords[0];
-                    y = coords[1];
-                     $.ajax({
+                  coordinatess = res.geoObjects.get(0).geometry.getCoordinates();
+                  x = coordinatess[0];
+                    y = coordinatess[1];
+                     console.log(coordinatess[0]+","+coordinatess[1]);
+                  
+                  $.ajax({
                       type: "PUT",
                       url: "/punkts/"+id,
                       data: {"X": x, "Y": y},
                     });
+
+                    id+=1;
+
+                    });*/
+
+  
+
+                     myPlacemark = new  ymaps.Placemark([coors[0], coors[1]], {
+                      balloonContentHeader: '<strong>'+ currentCity +'</strong>',
+                      balloonContentBody: '<em>'+ works+'</em>'+'<em>'+ address+'</em>',
+                      balloonContentFooter: '<p>'+ tel +'</p>'
+                    });
+                    
                     //console.log(coords);
                     map.geoObjects.add(myPlacemark);
-                    id+=1;
-                  return coords;
-                });
+
+                
             //
 
             li += "<a href='#'><div class='punkt' style='border:1px solid gray;margin-bottom:10px;padding:5px;'>";
 
               for(var value in attrs_punkt) {
+                  attributes = attrs_punkt[value];
+
+                switch (value) {
+                             case "Address":
+                                value = "Адрес"
+                                break
+                             case "Works":
+                                value = "Режим работы"
+                                break
+                             case "Phone":
+                                value = "Телефон"
+                                break
+                                 }
                  
-                li += "<li>"+value+" | " + attrs_punkt[value]+"</li>";
+                li += "<li>"+value+" | " + attributes +"</li>";
               }
 
               li+= "</div></a>";
